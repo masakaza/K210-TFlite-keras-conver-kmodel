@@ -44,6 +44,7 @@ wget https://github.com/kendryte/nncase/releases/download/v0.2.0-beta4/ncc_linux
 tar -xvf ncc_linux_x86_64.tar.xz
 cd /ncc_linux_x86_64
 mkdir dataset
+mkdir models
 ```
 Then, follow the same usage instructions as above.
 
