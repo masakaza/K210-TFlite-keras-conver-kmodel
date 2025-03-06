@@ -1,44 +1,49 @@
-# K210-TFlite-keras-conver-kmodel
-转换keras模型或者TFlite模型到K210的专用模型格式kmodel的方法
+🌍 [English](README.md) | 🇨🇳 [中文](README.zh-CN.md)
 
-## 环境要求
-- [tensorflow](https://tensorflow.google.cn/install)
 
-## 转换成TFlite
-一般我们用tensorflow训练模型时，得到的模型文件夹都是扩展名为 __.h5__ 的模型文件
+# K210-TFlite-Keras-Convert-Kmodel
+A guide to converting Keras or TFLite models to the K210-specific Kmodel format.
+
+## Requirements
+- [TensorFlow](https://tensorflow.google.cn/install)
+
+## Convert to TFLite
+When training models with TensorFlow, the resulting model files typically have a __.h5__ extension.
 ```bash
-例如 <models.h5>
+Example: <models.h5>
 ```
-这种模型需要先转换成 __.tflite__ 格式的模型文件才能进行下一步的操作，运行 __convert_tflite.py__
+Before proceeding, these models need to be converted into the __.tflite__ format. Run the `convert_tflite.py` script:
 ```bash
-python3 convert_tflite.py --dataset <./models/你的模型文件>
- ```
-运行后会在目录下生成 __convert.tflite__
+python3 convert_tflite.py --dataset <./models/your_model_file>
+```
+After execution, a __convert.tflite__ file will be generated in the directory.
 
-## 转换成Kmodel
-在转换成Kmodel之前，我们要用到 __[nncase工具箱](https://github.com/kendryte/nncase/tree/release/1.0)__ 下载好后的文件里已经包含了 nncaseV0.2.0beta4 因为 __k210只支持v3/v4的kmodel__ v3的kmodel是用v0.1.0rc5,v4的是用v0.2.0beta4 （官方推荐）
+## Convert to Kmodel
+Before converting to Kmodel, we need the __[nncase toolbox](https://github.com/kendryte/nncase/tree/release/1.0)__. The downloaded files include `nncase V0.2.0 beta4` because __K210 only supports V3/V4 Kmodel__. V3 Kmodel uses `V0.1.0 rc5`, while V4 uses `V0.2.0 beta4` (officially recommended).
 
-先切换到nncase的工作目录
+First, navigate to the nncase working directory:
 ```bash
 cd ./ncc_win_x86_64
 ```
-然后把.tflite文件复制到ncc_win_x86_64文件下，在dataset文件中放入你训练该模型时 __所使用的图片数据__ 作为量化的校准数据集
-然后运行以下命令
-```bash
-./ncc compile ./<你的模型名字>.tflite ./<输出的模型名字>.kmodel -i tflite -o kmodel --dataset dataset --inference-type uint8
-```
-可以更改 __--inference-type__ 来更改生成模型时所使用的量化方式 (uint8、float)
-- 如果选择float则模型不作任何量化
+Then, copy the `.tflite` file to the `ncc_win_x86_64` folder. Place the images used for training the model in the `dataset` folder as calibration data for quantization.
 
-在目录下会生成 __.kmodel__ 文件
+Run the following command:
+```bash
+./ncc compile ./<your_model_name>.tflite ./<output_model_name>.kmodel -i tflite -o kmodel --dataset dataset --inference-type uint8
+```
+You can modify __--inference-type__ to change the quantization method used when generating the model (`uint8`, `float`).
+- If `float` is chosen, the model will not be quantized.
+
+The output __.kmodel__ file will be generated in the directory.
 
 ## Linux
 
-可以在 [这里](https://github.com/kendryte/nncase/releases/tag/v0.2.0-beta4)下载linux架构的文件，或者使用以下命令下载
+You can download the Linux version from [here](https://github.com/kendryte/nncase/releases/tag/v0.2.0-beta4) or use the following command:
 ```bash
 wget https://github.com/kendryte/nncase/releases/download/v0.2.0-beta4/ncc_linux_x86_64.tar.xz
 tar -xvf ncc_linux_x86_64.tar.xz
 cd /ncc_linux_x86_64
 mkdir dataset
 ```
-然后使用方法如上同
+Then, follow the same usage instructions as above.
+
